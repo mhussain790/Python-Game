@@ -28,6 +28,10 @@ score = 0								#initialize score to 0
 myFont = pygame.font.SysFont("calibri", 35)
 clock = pygame.time.Clock()
 
+crash = pygame.mixer.Sound("crash.wav")
+pygame.mixer.music.load("game.mp3")
+pygame.mixer.music.play(-1)
+
 def set_level(score, SPEED):
 	if score < 50:
 		speed = 5
@@ -67,6 +71,7 @@ def update_enemy_positions(enemy_list, score):
 def collision_check(enemy_list, player_pos):
 	for enemy_pos in enemy_list:
 		if detect_collision(enemy_pos, player_pos):
+			crash_sound()
 			return True
 	return False		
 
@@ -83,6 +88,11 @@ def detect_collision(player_pos, enemy_pos):			#detects enemy collision with pla
 		if (e_y >= p_y and e_y < (p_y + player_size)) or (p_y >= e_y and p_y < (e_y + enemy_size)):
 			return True
 	return False	
+
+def crash_sound():
+	pygame.mixer.Sound.play(crash)
+	pygame.mixer.music.stop()
+
 
 while not game_over:
 
@@ -109,6 +119,7 @@ while not game_over:
 
 	if detect_collision(player_pos, enemy_pos):
 		game_over = True
+
 
 	draw_enemies(enemy_list)
 	score = update_enemy_positions(enemy_list, score)
